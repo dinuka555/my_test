@@ -29,7 +29,7 @@ jobs:
       
     - name: Deploy in GKE
       run: |
-        helm upgrade $APPLICATION_NAME $APPLICATION_NAME-cluster/ \
+        helm upgrade $APPLICATION_NAME $APPLICATION_NAME/ \
           --set dinuka.image.tag=:latest \
           --wait
         kubectl rollout status deployment/$DEPLOYMENT_NAME

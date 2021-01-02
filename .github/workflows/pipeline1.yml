@@ -3,6 +3,15 @@ name: Pipeline
 on: [push]
 env:
   APPLICATION_NAME: app2
+  GKE_PROJECT: randocats -- 
+  GKE_EMAIL: ${{ secrets.GKE_EMAIL }}
+  GITHUB_SHA: ${{ github.sha }}
+  GKE_ZONE: us-east1-a
+  GKE_CLUSTER: dinuka-cluster
+  IMAGE: randocats
+  REGISTRY_HOSTNAME: us.gcr.io
+  DEPLOYMENT_NAME: randocats
+  
 jobs:
   lint:
     runs-on: ubuntu-18.04
@@ -44,9 +53,9 @@ jobs:
     - name: Deploy
       run: |
         gcloud container clusters get-credentials $GKE_CLUSTER \
-          --zone us-west1-a \
-          --project $GKE_PROJECT
-        helm upgrade $GKE_PROJECT $GKE_PROJECT-cluster/ \
+          --zone $GKE_ZONE \
+          --project $APPLICATION_NAME
+        helm upgrade $APPLICATION_NAME $APPLICATION_NAME-cluster/ \
           --set randocats.image.tag=$GITHUB_SHA \
           --wait
         kubectl rollout status deployment/$DEPLOYMENT_NAME

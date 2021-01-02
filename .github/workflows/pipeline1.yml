@@ -82,7 +82,14 @@ jobs:
         curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
       
       
+    - name: Deploy
+      run: |
 
+        helm upgrade $APPLICATION_NAME $APPLICATION_NAME-cluster/ \
+          --set gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ env.APPLICATION_NAME }}:latest \
+          --wait
+        kubectl rollout status deployment/dinuka_deployment
+        kubectl get services -o wide
 
 
 

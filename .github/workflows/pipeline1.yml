@@ -81,11 +81,7 @@ jobs:
       run: |
         curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
       
-         helm upgrade $GKE_PROJECT $GKE_PROJECT-cluster/ \
-          --set randocats.image.tag=$GITHUB_SHA \
-          --wait
-        kubectl rollout status deployment/dinuka_deployment
-        kubectl get services -o wide
+      
 
 
 

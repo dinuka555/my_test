@@ -3,8 +3,7 @@ name: Pipeline
 on: [push]
 env:
   APPLICATION_NAME: app2
-  GKE_CLUSTER: dinuka-cluster
-  DEPLOYMENT_NAME: dinuka
+  DEPLOYMENT_NAME: dinuka_deploy
 jobs:
 
 

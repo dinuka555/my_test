@@ -76,13 +76,17 @@ jobs:
         gcloud config set run/region ${{ secrets.GCP_REGION }}
         gcloud info
         
-    - name: Deploy to Cloud Run
-      run: gcloud run deploy ${{ env.APPLICATION_NAME }} --image=gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ env.APPLICATION_NAME }}:latest --platform=managed --allow-unauthenticated
-
-    - name: Test deployment
+ 
+    - name: Install Helm
       run: |
-        DEPLOY_URL=$(gcloud run services describe app2 --platform=managed --region=us-central1 | grep https)
-        curl -sL --max-time 300 -o /dev/null -w "%{http_code}" $DEPLOY_URL | grep 200 || exit 1
-        
+        curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+      
+         helm upgrade $GKE_PROJECT $GKE_PROJECT-cluster/ \
+          --set randocats.image.tag=$GITHUB_SHA \
+          --wait
+        kubectl rollout status deployment/dinuka_deployment
+        kubectl get services -o wide
+
+
 
 

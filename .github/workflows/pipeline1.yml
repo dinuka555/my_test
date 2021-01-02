@@ -3,6 +3,8 @@ name: Pipeline
 on: [push]
 env:
   APPLICATION_NAME: app2
+  GKE_CLUSTER: dinuka-cluster
+  DEPLOYMENT_NAME: dinuka
 jobs:
   lint:
     runs-on: ubuntu-18.04
@@ -84,13 +86,13 @@ jobs:
       
     - name: Deploy in GKE
       run: |
-        gcloud container clusters get-credentials DINUKA_CLUSTER \
+        gcloud container clusters get-credentials $GKE_CLUSTER \
         gcloud config set project ${{ secrets.GCP_PROJECT_ID }}
         gcloud config set run/region ${{ secrets.GCP_REGION }}
         helm upgrade $APPLICATION_NAME $APPLICATION_NAME-cluster/ \
           --set gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ env.APPLICATION_NAME }}:latest \
           --wait
-        kubectl rollout status deployment/dinuka_deployment
+        kubectl rollout status deployment/$DEPLOYMENT_NAME
         kubectl get services -o wide
 
 

@@ -30,7 +30,9 @@ jobs:
       
     - name: Deploy in GKE
       run: |
-
+        helm upgrade ${{ secrets.GCP_PROJECT_ID }} ${{ secrets.GCP_PROJECT_ID-cluster }}/ 
+          --set dinuka.image.tag=:latest \
+          --wait
         kubectl rollout status deployment/$DEPLOYMENT_NAME
         kubectl get services -o wide
 

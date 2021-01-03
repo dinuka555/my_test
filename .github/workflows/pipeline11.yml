@@ -19,17 +19,22 @@ jobs:
         version: '274.0.1'
         service_account_email: ${{ secrets.GCP_SERVICE_ACCT_EMAIL }}
         service_account_key: ${{ secrets.GCP_SERVICE_ACCT_KEY }}
-    - name: Install Helm
-      run: |
-        curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
-        helm version
+
       
     - run: |
         gcloud config set project ${{ secrets.GCP_PROJECT_ID }}
         gcloud config set run/region ${{ secrets.GCP_REGION }}
         gcloud info
-        
       
+    - name: Install Helm
+      run: |
+        curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+        helm version
+
+    - name: Create GKE cluster
+      run: |
+        kubectl create ns dinuka_namespace     
+         
     - name: Deploy in GKE
       run: |
         helm upgrade ${{ secrets.GCP_PROJECT_ID }} ${{ secrets.GCP_PROJECT_ID-cluster }}/ 

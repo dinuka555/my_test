@@ -30,19 +30,12 @@ jobs:
       run: |
         curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
         helm version
-        helm repo add bitnami https://charts.bitnami.com/bitnami
-        helm repo update
-        helm repo list
-        helm install my-release bitnami/kube-state-metrics
+
         
 
-    - name: Create GKE cluster
-      run: |
-        kubectl create ns dinuka_namespace     
-         
     - name: Deploy in GKE
       run: |
-        helm upgrade ${{ secrets.GCP_PROJECT_ID }} ${{ secrets.GCP_PROJECT_ID-cluster }}/ 
+        helm upgrade ${{ secrets.GCP_PROJECT_ID }} dinuka-cluster/ 
           --sudo set dinuka.image.tag=:latest \
           --wait
         kubectl rollout status deployment/$DEPLOYMENT_NAME

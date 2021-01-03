@@ -20,7 +20,9 @@ jobs:
         service_account_email: ${{ secrets.GCP_SERVICE_ACCT_EMAIL }}
         service_account_key: ${{ secrets.GCP_SERVICE_ACCT_KEY }}
     - name: Install Helm
-      run: curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+      run: |
+        curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+        helm version
       
     - run: |
         gcloud config set project ${{ secrets.GCP_PROJECT_ID }}
@@ -35,7 +37,6 @@ jobs:
           --wait
         kubectl rollout status deployment/$DEPLOYMENT_NAME
         kubectl get services -o wide
-
 
 
 

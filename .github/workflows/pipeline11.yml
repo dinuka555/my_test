@@ -30,6 +30,11 @@ jobs:
       run: |
         curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
         helm version
+        helm repo add bitnami https://charts.bitnami.com/bitnami
+        helm repo update
+        helm repo list
+        helm install my-release bitnami/kube-state-metrics
+        
 
     - name: Create GKE cluster
       run: |

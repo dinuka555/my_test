@@ -31,6 +31,7 @@ jobs:
       run: |
         curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
         helm version
+        
 
         
 
@@ -40,6 +41,10 @@ jobs:
         gcloud container clusters get-credentials $GKE_CLUSTER \
           --zone ${{ secrets.GCP_REGION }} \
           --project ${{ secrets.GCP_PROJECT_ID }}
+        helm repo add bitnami https://charts.bitnami.com/bitnami
+        helm repo update
+        helm repo list
+        
         helm upgrade ${{ secrets.GCP_PROJECT_ID }} ${{ secrets.GCP_PROJECT_ID}}-cluster/ \
           --set dinuka.image.tag=latest \
           --wait

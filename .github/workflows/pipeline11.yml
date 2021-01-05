@@ -43,7 +43,7 @@ jobs:
         
         helm ls -n metrics
         
-        kubectl create ns dinu
+
 
         
         helm upgrade ${{ secrets.GCP_PROJECT_ID }} ${{ secrets.GCP_PROJECT_ID }} 

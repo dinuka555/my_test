@@ -44,11 +44,11 @@ jobs:
         helm ls -n metrics
         
         kubectl create ns dinu
-        helm install kube-state-metrics bitnami/kube-state-metrics -n dinu
+
         
-        helm upgrade ${{ secrets.GCP_PROJECT_ID }} ${{ secrets.GCP_PROJECT_ID }} -n dinu
+        helm upgrade ${{ secrets.GCP_PROJECT_ID }} ${{ secrets.GCP_PROJECT_ID }} 
           --set app2.image.tag=latest \
-          --wait
+          --wait  -n dinu
         kubectl rollout status deployment/$DEPLOYMENT_NAME
         kubectl get services -o wide
 

@@ -45,8 +45,7 @@ jobs:
         helm repo update
         helm repo list
         
-        kubectl create ns metrics 
-        helm install kube-state-matrics bitnami/kube-state-metrics -n metrics
+
         
         helm ls -n metrics
         

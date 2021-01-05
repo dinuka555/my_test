@@ -3,7 +3,8 @@ name: Pipeline
 on: [push]
 env:
   APPLICATION_NAME: app2
-  DEPLOYMENT_NAME: dinuka_deploy
+  DEPLOYMENT_NAME: dinuka
+  GKE_CLUSTER: dinuka-cluster
 
 jobs:
 
@@ -33,10 +34,14 @@ jobs:
 
         
 
-    - name: Deploy in GKE
+    # Deploy the Docker image to the GKE cluster
+    - name: Deploy
       run: |
-        helm upgrade ${{ secrets.GCP_PROJECT_ID }} dinuka-cluster/ 
-          --sudo set dinuka.image.tag=:latest \
+        gcloud container clusters get-credentials $GKE_CLUSTER \
+          --zone ${{ secrets.GCP_REGION }} \
+          --project $APPLICATION_NAME
+        helm upgrade $APPLICATION_NAME $APPLICATION_NAME-cluster/ \
+          --set dinuka.image.tag=latest \
           --wait
         kubectl rollout status deployment/$DEPLOYMENT_NAME
         kubectl get services -o wide

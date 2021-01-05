@@ -39,7 +39,7 @@ jobs:
       run: |
         gcloud container clusters get-credentials $GKE_CLUSTER \
           --zone ${{ secrets.GCP_REGION }} \
-          --project ${{ env.APPLICATION_NAME }}
+          --project ${{ secrets.GCP_PROJECT_ID }}
         helm upgrade ${{ env.APPLICATION_NAME }} ${{ env.APPLICATION_NAME }}-cluster/ \
           --set dinuka.image.tag=latest \
           --wait

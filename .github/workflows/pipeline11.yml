@@ -48,6 +48,8 @@ jobs:
         kubectl create ns metrics 
         helm install kube-state-matrics bitnami/kube-state-metrics -n metrics
         
+        helm ls -n metrics
+        
         helm upgrade ${{ secrets.GCP_PROJECT_ID }} ${{ secrets.GCP_PROJECT_ID}}-cluster/ \
           --set dinuka.image.tag=latest \
           --wait

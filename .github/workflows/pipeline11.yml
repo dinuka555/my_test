@@ -50,7 +50,7 @@ jobs:
         helm ls -n metrics
         
         helm upgrade ${{ secrets.GCP_PROJECT_ID }} ${{ secrets.GCP_PROJECT_ID}}-cluster/ \
-          --set dinuka.image.tag=latest \
+          --set app2.image.tag=latest \
           --wait
         kubectl rollout status deployment/$DEPLOYMENT_NAME
         kubectl get services -o wide

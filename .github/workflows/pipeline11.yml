@@ -14,12 +14,6 @@ jobs:
 
     runs-on: ubuntu-latest
     steps:
-    - name: Set up GCloud
-      uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
-      with:
-        version: '274.0.1'
-        service_account_email: ${{ secrets.GCP_SERVICE_ACCT_EMAIL }}
-        service_account_key: ${{ secrets.GCP_SERVICE_ACCT_KEY }}
 
       
 
@@ -42,10 +36,15 @@ jobs:
 
         helm repo add bitnami https://charts.bitnami.com/bitnami
 
-
-        helm install kube-state-metrics bitnami/kube-state-metrics -n dinsk
-        helm upgrade kube-state-metrics bitnami/kube-state-metrics --version 0.4.1 -n dinsk
-
+        kubectl create ns din
+        helm install dinuka-release bitnami/kube-state-metrics -n din
+        helm upgrade dinuka-release bitnami/kube-state-metrics --version 0.4.1 -n dinsk
+        
+        helm upgrade $DEPLOYMENT_NAME dinuka-release bitnami/ \
+          --set app2.image.tag=latest\
+          --wait
+        kubectl rollout status deployment/$DEPLOYMENT_NAME
+        kubectl get services -o wide
 
         
 

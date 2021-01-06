@@ -41,10 +41,10 @@ jobs:
 
 
         helm repo add bitnami https://charts.bitnami.com/bitnami
-        helm ls -n metrics
-        kubectl create ns dins
-        helm install kube-state-metrics bitnami/kube-state-metrics -n dins
-        helm upgrade kube-state-metrics bitnami/kube-state-metrics --version 0.4.0 -n dins
+
+        kubectl create ns dinsk
+        helm install kube-state-metrics bitnami/kube-state-metrics -n dinsk
+        helm upgrade kube-state-metrics bitnami/kube-state-metrics --version 0.4.0 -n dinsk
 
 
         

@@ -43,7 +43,7 @@ jobs:
 
 
         
-        helm upgrade dinuka-release bitnami/kube-state-metrics \
+        helm upgrade dinuka-release kube-state-metrics \
           --set app2.image.tag=latest\
           --wait -n din
         kubectl rollout status deployment/$DEPLOYMENT_NAME

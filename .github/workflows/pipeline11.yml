@@ -40,13 +40,10 @@ jobs:
           --project ${{ secrets.GCP_PROJECT_ID }}
 
 
-        helm repo add bitnami https://charts.bitnami.com/bitnami
 
-        kubectl create ns din
-        helm install dinuka-release bitnami/kube-state-metrics -n din
 
         
-        helm upgrade $DEPLOYMENT_NAME dinuka-release bitnami/ \
+        helm upgrade dinuka-release bitnami/ \
           --set app2.image.tag=latest\
           --wait -n din
         kubectl rollout status deployment/$DEPLOYMENT_NAME

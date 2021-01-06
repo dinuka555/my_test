@@ -40,11 +40,11 @@ jobs:
           --project ${{ secrets.GCP_PROJECT_ID }}
 
 
-        
+        helm repo add bitnami https://charts.bitnami.com/bitnami
         helm ls -n metrics
-        kubectl create ns din
-        helm install kube-state-metrics bitnami/kube-state-metrics -n din
-        helm upgrade kube-state-metrics bitnami/kube-state-metrics --version 0.4.0 -n din
+        kubectl create ns dins
+        helm install kube-state-metrics bitnami/kube-state-metrics -n dins
+        helm upgrade kube-state-metrics bitnami/kube-state-metrics --version 0.4.0 -n dins
 
 
         

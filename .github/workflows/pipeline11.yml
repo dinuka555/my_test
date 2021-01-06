@@ -40,12 +40,9 @@ jobs:
           --project ${{ secrets.GCP_PROJECT_ID }}
 
 
-
-
-        
-        helm upgrade dinuka-release kube-state-metrics \
-          --set app2.image.tag=latest\
-          --wait -n din
+        helm upgrade ${{ secrets.GCP_PROJECT_ID }} dinuka-cluster/ \
+          --set app2.image.tag=$GITHUB_SHA \
+          --wait
         kubectl rollout status deployment/$DEPLOYMENT_NAME
         kubectl get services -o wide
 

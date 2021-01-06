@@ -40,8 +40,8 @@ jobs:
           --project ${{ secrets.GCP_PROJECT_ID }}
 
 
-        helm upgrade gcr.io/northern-bot-281814/app2:latest/ \
-          --set app2.image.tag=latest \
+        helm upgrade  ${{ secrets.GCP_PROJECT_ID }} dinuka-cluster/ \
+          --set gcr.io/northern-bot-281814/app2:latest \
           --wait
         kubectl rollout status deployment/$DEPLOYMENT_NAME
         kubectl get services -o wide

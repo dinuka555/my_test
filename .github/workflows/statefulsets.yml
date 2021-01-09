@@ -1,10 +1,9 @@
-name: Pipeline
+name: Create Staefulsets
 
 on: [push]
 env:
   APPLICATION_NAME: app2
-  DEPLOYMENT_NAME: dinuka
-  GKE_CLUSTER: dinuka-cluster
+
 
 jobs:
   deploy:

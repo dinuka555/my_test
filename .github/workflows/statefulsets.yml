@@ -4,7 +4,6 @@ on: [push]
 env:
   APPLICATION_NAME: app2
 
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -23,8 +22,5 @@ jobs:
         gcloud container clusters get-credentials $GKE_CLUSTER \
           --zone ${{ secrets.GCP_REGION }} \
           --project ${{ secrets.GCP_PROJECT_ID }}
-        # helm upgrade  ${{ secrets.GCP_PROJECT_ID }} dinuka-cluster/ \
-        #   --set gcr.io/northern-bot-281814/app2:latest \
-        #    --wait
+
         kubectl cluster-info
-        # kubectl get services -o wide

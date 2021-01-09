@@ -32,9 +32,9 @@ jobs:
           --project ${{ secrets.GCP_PROJECT_ID }}
 
 
-        helm upgrade  ${{ secrets.GCP_PROJECT_ID }} dinuka-cluster/ \
-           --set gcr.io/northern-bot-281814/app2:latest \
-            --wait
+        #helm upgrade  ${{ secrets.GCP_PROJECT_ID }} dinuka-cluster/ \
+        #   --set gcr.io/northern-bot-281814/app2:latest \
+         #   --wait
         kubectl cluster-info
         # kubectl get services -o wide
 

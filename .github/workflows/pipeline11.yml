@@ -17,6 +17,12 @@ jobs:
         version: '274.0.1'
         service_account_email: ${{ secrets.GCP_SERVICE_ACCT_EMAIL }}
         service_account_key: ${{ secrets.GCP_SERVICE_ACCT_KEY }}
+
+    - name: Install helm
+      run: |
+        curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
+        chmod 700 get_helm.sh
+        ./get_helm.sh
         
     # Deploy the Docker image to the GKE cluster
     - name: Deploy
@@ -26,9 +32,9 @@ jobs:
           --project ${{ secrets.GCP_PROJECT_ID }}
 
 
-        # helm upgrade  ${{ secrets.GCP_PROJECT_ID }} dinuka-cluster/ \
-        #   --set gcr.io/northern-bot-281814/app2:latest \
-        #    --wait
+        helm upgrade  ${{ secrets.GCP_PROJECT_ID }} dinuka-cluster/ \
+           --set gcr.io/northern-bot-281814/app2:latest \
+            --wait
         kubectl cluster-info
         # kubectl get services -o wide
 

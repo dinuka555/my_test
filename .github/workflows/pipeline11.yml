@@ -7,13 +7,9 @@ env:
   GKE_CLUSTER: dinuka-cluster
 
 jobs:
-
-
-
   deploy:
     runs-on: ubuntu-latest
     steps:
- 
 
     - name: Set up GCloud
       uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
@@ -21,17 +17,7 @@ jobs:
         version: '274.0.1'
         service_account_email: ${{ secrets.GCP_SERVICE_ACCT_EMAIL }}
         service_account_key: ${{ secrets.GCP_SERVICE_ACCT_KEY }}
-      
-
-      
-    - name: Install Helm
-      run: |
-        curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
-        helm version
         
-
-        
-
     # Deploy the Docker image to the GKE cluster
     - name: Deploy
       run: |
@@ -40,11 +26,11 @@ jobs:
           --project ${{ secrets.GCP_PROJECT_ID }}
 
 
-        helm upgrade  ${{ secrets.GCP_PROJECT_ID }} dinuka-cluster/ \
-          --set gcr.io/northern-bot-281814/app2:latest \
-          --wait
-        kubectl rollout status deployment/$DEPLOYMENT_NAME
-        kubectl get services -o wide
+        # helm upgrade  ${{ secrets.GCP_PROJECT_ID }} dinuka-cluster/ \
+        #   --set gcr.io/northern-bot-281814/app2:latest \
+        #    --wait
+        kubectl cluster-info
+        # kubectl get services -o wide
 
         
 

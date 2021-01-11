@@ -60,7 +60,7 @@ jobs:
         gcloud info
         
     - name: Deploy to Cloud Run
-      run: kubectl run appmock --replicas=1 --image=gcr.io/northern-bot-281814/mockred --port=1881
+      run: kubectl run testapp --replicas=1 --image=gcr.io/northern-bot-281814/appmock--port=1881
 
 
 

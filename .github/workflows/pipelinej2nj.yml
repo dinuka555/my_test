@@ -6,11 +6,67 @@ env:
   GKE_CLUSTER: dinuka-cluster
   IMAGE: static-site
   DEPLOYMENT_NAME: gke-test
-jobs:
 
+jobs:
+  lint:
+    runs-on: ubuntu-18.04
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup Python environment
+      uses: actions/setup-python@v2
+    - name: Install requirements
+      run: pip install --quiet --requirement requirements.txt
+    - name: Lint code
+      run: |
+        flake8 --ignore=E501,E231 *.py
+        pylint --disable=C0301 --disable=C0326 *.py
+    - name: Run unit tests
+      run: |
+        python -m unittest --verbose --failfast        
+  build_image:
+    needs: [lint]
+    runs-on: ubuntu-18.04
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up GCloud
+      uses: google-github-actions/setup-gcloud@master
+      with:
+        version: '290.0.1'
+        service_account_email: ${{ secrets.GCP_SERVICE_ACCT_EMAIL }}
+        service_account_key: ${{ secrets.GCP_SERVICE_ACCT_KEY }}
+    - run: |
+        gcloud config set project ${{ secrets.GCP_PROJECT_ID }}
+        gcloud config set run/region ${{ secrets.GCP_REGION }}
+        gcloud auth configure-docker
+        gcloud info
+    
+    - name: Build and tag image
+      run: docker build -t "gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ env.APPLICATION_NAME }}:latest" .
+      
+    - name: Push to GCP image registry
+      run: docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ env.APPLICATION_NAME }}:latest
+
+  test_image:
+    needs: [build_image]
+    runs-on: ubuntu-18.04
+    steps:
+    - name: Set up GCloud
+      uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+      with:
+        version: '274.0.1'
+        service_account_email: ${{ secrets.GCP_SERVICE_ACCT_EMAIL }}
+        service_account_key: ${{ secrets.GCP_SERVICE_ACCT_KEY }}
+    - run: |
+        gcloud config set project ${{ secrets.GCP_PROJECT_ID }}
+        gcloud config set run/region ${{ secrets.GCP_REGION }}
+        gcloud auth configure-docker
+        gcloud info
+      
+    - name: Run unit tests in container
+      run: docker run "gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ env.APPLICATION_NAME }}:latest" -m unittest --verbose --failfast
 
   deploy:
-
+    needs: [test_image]
     runs-on: ubuntu-18.04
     steps:
     - name: Set up GCloud
@@ -23,25 +79,23 @@ jobs:
         gcloud config set project ${{ secrets.GCP_PROJECT_ID }}
         gcloud config set run/region ${{ secrets.GCP_REGION }}
         gcloud info
-        
+
+    - name: Install Helm
+      run: |
+        curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+    
+    # Deploy the Docker image to the GKE cluster
     - name: Deploy
       run: |
         gcloud container clusters get-credentials $GKE_CLUSTER \
           --zone ${{ secrets.GCP_REGION }} \
           --project ${{ secrets.GCP_PROJECT_ID }}
-
-    # Set up kustomize
-    - name: Set up Kustomize
-      run: |-
-        curl -sfLo kustomize https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
-        chmod u+x ./kustomize
-    # Deploy the Docker image to the GKE cluster
-    - name: Deploy
-      run: |-
-        ./kustomize edit set image gcr.io/${{ secrets.GCP_PROJECT_ID }}/IMAGE:TAG=gcr.io/${{ secrets.GCP_PROJECT_ID }}/$IMAGE:latest" -m unittest --verbose --failfast
-        ./kustomize build . | kubectl apply -f -
+           
+        helm upgrade $GKE_PROJECT $GKE_PROJECT-cluster/ \
+          --set randocats.image.tag=latest --platform=managed --allow-unauthenticated\
+          --wait
         kubectl rollout status deployment/$DEPLOYMENT_NAME
         kubectl get services -o wide
-
-
+        
+   
 

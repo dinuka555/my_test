@@ -1,25 +1,29 @@
-# Dockerfile for Node-RED - pulls latest master code from git
-# Use the node.js v4 LTS engine
-FROM node:4-slim
-MAINTAINER ceejay
+FROM mhart/alpine-node:4
 
-RUN mkdir -p /root/.node-red
-WORKDIR /root/.node-red
- 
-# download latest stable node-red
-RUN npm install -g --unsafe-perm node-red
+# Home directory for Node-RED application source code.
+RUN mkdir -p /usr/src/node-red
 
+# User data directory, contains flows, config and nodes.
+RUN mkdir /data
 
-# use external storage for the user directory
-VOLUME /root/.node-red
+WORKDIR /usr/src/node-red
 
-# expose port
+# Add node-red user so we aren't running as root.
+RUN adduser -h /usr/src/node-red -D -H node-red \
+    && chown -R node-red:node-red /data \
+    && chown -R node-red:node-red /usr/src/node-red
+
+USER node-red
+
+# package.json contains Node-RED NPM module and node dependencies
+COPY package.json /usr/src/node-red/
+RUN npm install
+
+# User configuration directory volume
+VOLUME ["/data"]
 EXPOSE 1880
- 
-# Set the default command to execute
-# when creating a new container
-CMD ["node-red-pi","-v","--max-old-space-size=512","flow.json"]
 
-# docker build --rm=true --tag=node-red .
-# docker run -it -p 1880:1880 --name mynodered node-red 
-# docker run -it -p 1880:1880 -v ~/data:/root/.node-red --name mynodered node-red
+# Environment variable holding file path for flows configuration
+ENV FLOWS=flows.json
+
+CMD ["npm", "start", "--", "--userDir", "/data"]

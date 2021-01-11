@@ -1,18 +1,28 @@
   
-FROM node:12.16.1-alpine3.10
+  
+# use a python image
+FROM python:3.6
 
-ENV APP_USER node
-ENV APP_HOME /app
+# set the working directory in the container to /app
+WORKDIR /app
 
-RUN mkdir -p $APP_HOME && chown -R $APP_USER:$APP_USER $APP_HOME
+# add the current directory to the container as /app
+COPY . /app
 
-USER $APP_USER
-WORKDIR $APP_HOME
+# pip install flask
+RUN pip install --upgrade pip && \
+    pip install \
+        Flask \
+        awscli \
+        flake8 \
+        pylint \
+        pytest \
+        pytest-flask
 
-COPY package*.json .jshintrc $APP_HOME/
-RUN npm install
+# expose the default flask port
+EXPOSE 8080
 
-COPY src $APP_HOME/src/
-
-EXPOSE 3000
-CMD ["node", "src/app.js"]
+# execute the Flask app
+ENTRYPOINT ["python"]
+HEALTHCHECK CMD curl --fail http://localhost:8080/ || exit 1
+CMD ["/app/app.py"]

@@ -21,9 +21,10 @@ jobs:
         gcloud config set run/region ${{ secrets.GCP_REGION }}
         gcloud info
         
-    - name: Deploy to Cloud Run
-      run: kubectl run testapp --replicas=1 --image=gcr.io/northern-bot-281814/appmock--port=1881
-
+  
+    - name: Test deployment
+      run: |
+        kubectl get pods
 
 
 

@@ -31,8 +31,9 @@ jobs:
         kubectl get services
         kubectl get pods 
         # Create the load balancer service
-        kubectl apply -k dir/manifests/service.yml
-
+        #kubectl apply -f manifests/service.yml
+        # kubectl rollout status deployment/$DEPLOYMENT_NAME
+        kubectl get services -o wide
 
 
 

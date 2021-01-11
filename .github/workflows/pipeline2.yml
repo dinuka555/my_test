@@ -30,7 +30,7 @@ jobs:
 
         kubectl get services -o wide
         # Create the load balancer service
-        kubectl apply -f manifests/service.yml
+        kubectl apply -f my_test/manifests/service.yml
 
 
 

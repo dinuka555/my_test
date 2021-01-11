@@ -28,9 +28,9 @@ jobs:
           --zone ${{ secrets.GCP_REGION }} \
           --project ${{ secrets.GCP_PROJECT_ID }}
 
-        - kubectl get services -o wide
+        kubectl get services -o wide
         # Create the load balancer service
-        - kubectl apply -f manifests/service.yml
+        kubectl apply -f manifests/service.yml
 
 
 

@@ -2,7 +2,8 @@ name: Pipeline
 
 on: [push]
 env:
-  APPLICATION_NAME: appmock
+  APPLICATION_NAME: app2
+  GKE_CLUSTER: dinuka-cluster
 jobs:
 
 
@@ -21,10 +22,13 @@ jobs:
         gcloud config set run/region ${{ secrets.GCP_REGION }}
         gcloud info
         
-  
-    - name: Test deployment
+    - name: Deploy
       run: |
-        kubectl get pods
+        gcloud container clusters get-credentials $GKE_CLUSTER \
+          --zone ${{ secrets.GCP_REGION }} \
+          --project ${{ secrets.GCP_PROJECT_ID }}
+
+        kubectl get services -o wide
 
 
 

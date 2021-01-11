@@ -1,26 +1,25 @@
-# use a python image
-FROM python:3.6
+# Dockerfile for Node-RED - pulls latest master code from git
+# Use the node.js v4 LTS engine
+FROM node:4-slim
+MAINTAINER ceejay
 
-# set the working directory in the container to /app
-WORKDIR /app
+RUN mkdir -p /root/.node-red
+WORKDIR /root/.node-red
+ 
+# download latest stable node-red
+RUN npm install -g --unsafe-perm node-red
+RUN npm install -g --save node-red/node-red-dashboard node-red-contrib-web-worldmap node-red-node-random
 
-# add the current directory to the container as /app
-COPY . /app
+# use external storage for the user directory
+VOLUME /root/.node-red
 
-# pip install flask
-RUN pip install --upgrade pip && \
-    pip install \
-        Flask \
-        awscli \
-        flake8 \
-        pylint \
-        pytest \
-        pytest-flask
+# expose port
+EXPOSE 1880
+ 
+# Set the default command to execute
+# when creating a new container
+CMD ["node-red-pi","-v","--max-old-space-size=512","flow.json"]
 
-# expose the default flask port
-EXPOSE 8080
-
-# execute the Flask app
-ENTRYPOINT ["python"]
-HEALTHCHECK CMD curl --fail http://localhost:8080/ || exit 1
-CMD ["/app/app.py"]
+# docker build --rm=true --tag=node-red .
+# docker run -it -p 1880:1880 --name mynodered node-red 
+# docker run -it -p 1880:1880 -v ~/data:/root/.node-red --name mynodered node-red

@@ -8,7 +8,7 @@ WORKDIR /root/.node-red
  
 # download latest stable node-red
 RUN npm install -g --unsafe-perm node-red
-RUN npm install -g --save node-red/node-red-dashboard node-red-contrib-web-worldmap node-red-node-random
+
 
 # use external storage for the user directory
 VOLUME /root/.node-red

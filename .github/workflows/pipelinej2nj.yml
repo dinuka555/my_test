@@ -31,7 +31,7 @@ jobs:
         kubectl get services
         kubectl get pods 
         # Create the load balancer service
-        kubectl apply -f service.yml | -k /manifests
+        kubectl apply -f service.yml | -k manifests/service.yml
 
 
 

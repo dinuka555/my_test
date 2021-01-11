@@ -33,7 +33,7 @@ jobs:
         # Create the load balancer service
         #kubectl apply -f manifests/service.yml
         # kubectl rollout status deployment/$DEPLOYMENT_NAME
-        kubectl get services -o wide
+        ./apply.sh manifests/deployment.yml addressbook-stable 3 "gcr.io/${{ secrets.GCP_PROJECT_ID }}/app2:latest"
 
 
 

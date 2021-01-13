@@ -36,7 +36,7 @@ jobs:
            
 
         kubectl get services -o wide
-        kubectl apply -f /home/dinukapraneeth/ak8s/Deployments/satellite-deployment.yaml
+        kubectl apply -f ./home/dinukapraneeth/ak8s/Deployments/satellite-deployment.yaml
      
         
    

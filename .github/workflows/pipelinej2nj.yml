@@ -37,7 +37,7 @@ jobs:
 
         kubectl get services -o wide
     - name: Run unit tests in container
-      run: kubectl run "gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ env.APPLICATION_NAME }}:latest" -m unittest --verbose --failfast
+      run: kubectl run satellites --replicas=1 --image="gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ env.APPLICATION_NAME }}:latest" -m unittest --verbose --failfast
      
         
    

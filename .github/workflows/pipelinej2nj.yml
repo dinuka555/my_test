@@ -36,7 +36,8 @@ jobs:
            
 
         kubectl get services -o wide
-        kubectl apply -f ./home/dinukapraneeth/ak8s/Deployments/satellite-deployment.yaml
+    - name: Run unit tests in container
+      run: kubectl run "gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ env.APPLICATION_NAME }}:latest" -m unittest --verbose --failfast
      
         
    

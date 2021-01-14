@@ -33,11 +33,12 @@ jobs:
         gcloud container clusters get-credentials $GKE_CLUSTER \
           --zone ${{ secrets.GCP_REGION }} \
           --project ${{ secrets.GCP_PROJECT_ID }}
-           
-
         kubectl get services -o wide
         kubectl create deployment satellites  --replicas=3 --image="gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ env.APPLICATION_NAME }}:latest" 
 
         
-   
+    - name: Test deployment
+      run: |
+        DEPLOY_URL=$(gcloud run services describe app2 --platform=managed --region=us-central1 | grep https)
+        curl -sL --max-time 300 -o /dev/null -w "%{http_code}" $DEPLOY_URL | grep 200 || exit 1
 

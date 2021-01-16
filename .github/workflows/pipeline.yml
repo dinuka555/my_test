@@ -36,7 +36,7 @@ jobs:
           --zone ${{ secrets.GCP_REGION }} \
           --project ${{ secrets.GCP_PROJECT_ID }}
         kubectl get services -o wide
-        kubectl apply -f service.yml
+        kubectl apply -f - service.yml
         kubectl create deployment satellites3  --replicas=2 --image="gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ env.APPLICATION_NAME }}:latest" 
 
         

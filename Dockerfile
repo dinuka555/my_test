@@ -3,7 +3,7 @@
 # use a python image
 FROM python:3.6
 
-# set the working directory in the container to /app
+# set the working directory in the container to /appp
 WORKDIR /app
 
 # add the current directory to the container as /app
